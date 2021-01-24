@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/src/user/mybatis-config.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/web/WEB-INF/config" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/web/WEB-INF/config" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/web/WEB-INF/spring-servlet.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/web/WEB-INF/spring-servlet.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/web/jquery-3.5.1.js" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/web/layer" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/web/layui" charset="GBK" />
+  </component>
+</project>
