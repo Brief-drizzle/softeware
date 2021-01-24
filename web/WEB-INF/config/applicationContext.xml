@@ -12,7 +12,11 @@
         <context:annotation-config />
 
                 <!-- 设置使用注解的类所在的jar包 -->
-        <context:component-scan base-package="user"/>
+        <context:component-scan base-package="user.controller"/>
+        <context:component-scan base-package="user.entity"/>
+        <context:component-scan base-package="user.mapper"/>
+        <context:component-scan base-package="user.mybatis"/>
+        <context:component-scan base-package="user.service"/>
 
                 <!-- 完成请求和注解POJO的映射 -->
         <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" />
