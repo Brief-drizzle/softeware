@@ -6,9 +6,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import user.entity.Instructor;
 import user.entity.People;
+import user.entity.Postgraduate;
 import user.entity.Tutor;
 import user.service.InstructorService;
 import user.service.PeopleService;
+import user.service.PostgraduateService;
 import user.service.TurtorService;
 
 import javax.servlet.http.HttpSession;
@@ -26,6 +28,8 @@ public class PeopleController {
     TurtorService turtorService;
     @Autowired
     InstructorService instructorService;
+    @Autowired
+    PostgraduateService postgraduateService;
 
     @RequestMapping(path = "/login",method = RequestMethod.POST)
     public String login(String username, String password, HttpSession session)
@@ -36,6 +40,8 @@ public class PeopleController {
         }
         else {
             if ("u000000001".equals(people.getPeoplecategoryId())){
+                Postgraduate postgraduate=postgraduateService.getPo(username);
+                session.setAttribute("nowpostgraduate", postgraduate);
                 return "Postgraduate";
             }
             else {
