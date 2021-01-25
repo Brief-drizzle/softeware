@@ -7,6 +7,9 @@
     <file url="file://$PROJECT_DIR$/web/WEB-INF/spring-servlet.xml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/web/WEB-INF/spring-servlet.xml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/web/jquery-3.5.1.js" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/web/jsp/Login.jsp" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/web/jsp/back4.jpg" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/web/jsp/index.jsp" charset="GBK" />
     <file url="file://$PROJECT_DIR$/web/layer" charset="GBK" />
     <file url="file://$PROJECT_DIR$/web/layui" charset="GBK" />
   </component>
