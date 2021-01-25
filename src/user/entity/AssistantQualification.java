@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * (AssistantQualification)实体类
- *
+ *助教资格
  * @author makejava
  * @since 2021-01-25 10:10:10
  */

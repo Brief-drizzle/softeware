@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * (People)实体类
- *
+ *用户
  * @author makejava
  * @since 2021-01-25 10:10:04
  */

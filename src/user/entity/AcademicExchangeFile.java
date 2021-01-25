@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * (AcademicExchangeFile)实体类
- *
+ *学术交流情况档案
  * @author makejava
  * @since 2021-01-25 10:10:11
  */

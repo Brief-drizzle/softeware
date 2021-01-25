@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * (ParticipateProjectFile)实体类
- *
+ *研究生参与项目档案
  * @author makejava
  * @since 2021-01-25 10:10:12
  */

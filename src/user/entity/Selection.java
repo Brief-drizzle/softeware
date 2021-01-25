@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * (Selection)实体类
- *
+ *志愿选择
  * @author makejava
  * @since 2021-01-25 10:10:08
  */

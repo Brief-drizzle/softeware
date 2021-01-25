@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * (ParticipateProject)实体类
- *
+ *参与项目认定表
  * @author makejava
  * @since 2021-01-25 10:10:12
  */

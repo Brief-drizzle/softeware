@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * (Director)实体类
- *
+ *学科负责人
  * @author makejava
  * @since 2021-01-25 10:10:11
  */

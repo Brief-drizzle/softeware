@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * (Peoplecategory)实体类
- *
+ *用户角色
  * @author makejava
  * @since 2021-01-25 10:10:04
  */

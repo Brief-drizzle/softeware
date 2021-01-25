@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * (AcademicExchange)实体类
- *
+ *学术交流活动表
  * @author makejava
  * @since 2021-01-25 10:10:10
  */
