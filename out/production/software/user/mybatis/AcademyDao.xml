@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user.dao.AcademyDao">
+
+    <resultMap type="user.entity.Academy" id="AcademyMap">
+        <result property="academyId" column="academy_id" jdbcType="VARCHAR"/>
+        <result property="assistantQualificationId" column="assistant_qualification_id" jdbcType="VARCHAR"/>
+        <result property="academyName" column="academy_name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="AcademyMap">
+        select
+          academy_id, assistant_qualification_id, academy_name
+        from software.academy
+        where academy_id = #{academyId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="AcademyMap">
+        select
+          academy_id, assistant_qualification_id, academy_name
+        from software.academy
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="AcademyMap">
+        select
+        academy_id, assistant_qualification_id, academy_name
+        from software.academy
+        <where>
+            <if test="academyId != null and academyId != ''">
+                and academy_id = #{academyId}
+            </if>
+            <if test="assistantQualificationId != null and assistantQualificationId != ''">
+                and assistant_qualification_id = #{assistantQualificationId}
+            </if>
+            <if test="academyName != null and academyName != ''">
+                and academy_name = #{academyName}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="academyId" useGeneratedKeys="true">
+        insert into software.academy(assistant_qualification_id, academy_name)
+        values (#{assistantQualificationId}, #{academyName})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="academyId" useGeneratedKeys="true">
+        insert into software.academy(assistant_qualification_id, academy_name)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.assistantQualificationId}, #{entity.academyName})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="academyId" useGeneratedKeys="true">
+        insert into software.academy(assistant_qualification_id, academy_name)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.assistantQualificationId}, #{entity.academyName})
+        </foreach>
+        on duplicate key update
+        assistant_qualification_id = values(assistant_qualification_id) , academy_name = values(academy_name)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update software.academy
+        <set>
+            <if test="assistantQualificationId != null and assistantQualificationId != ''">
+                assistant_qualification_id = #{assistantQualificationId},
+            </if>
+            <if test="academyName != null and academyName != ''">
+                academy_name = #{academyName},
+            </if>
+        </set>
+        where academy_id = #{academyId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from software.academy where academy_id = #{academyId}
+    </delete>
+
+</mapper>

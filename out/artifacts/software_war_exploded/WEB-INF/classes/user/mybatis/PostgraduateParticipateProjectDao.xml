@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user.dao.PostgraduateParticipateProjectDao">
+
+    <resultMap type="user.entity.PostgraduateParticipateProject" id="PostgraduateParticipateProjectMap">
+        <result property="postgraduateId" column="postgraduate_id" jdbcType="VARCHAR"/>
+        <result property="participateProjectId" column="participate_project_id" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="PostgraduateParticipateProjectMap">
+        select
+          postgraduate_id, participate_project_id
+        from software.postgraduate_participate_project
+        where postgraduate_id = #{postgraduateId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="PostgraduateParticipateProjectMap">
+        select
+          postgraduate_id, participate_project_id
+        from software.postgraduate_participate_project
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="PostgraduateParticipateProjectMap">
+        select
+        postgraduate_id, participate_project_id
+        from software.postgraduate_participate_project
+        <where>
+            <if test="postgraduateId != null and postgraduateId != ''">
+                and postgraduate_id = #{postgraduateId}
+            </if>
+            <if test="participateProjectId != null and participateProjectId != ''">
+                and participate_project_id = #{participateProjectId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="postgraduateId" useGeneratedKeys="true">
+        insert into software.postgraduate_participate_project()
+        values ()
+    </insert>
+
+    <insert id="insertBatch" keyProperty="postgraduateId" useGeneratedKeys="true">
+        insert into software.postgraduate_participate_project()
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            ()
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="postgraduateId" useGeneratedKeys="true">
+        insert into software.postgraduate_participate_project()
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            ()
+        </foreach>
+        on duplicate key update
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update software.postgraduate_participate_project
+        <set>
+        </set>
+        where postgraduate_id = #{postgraduateId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from software.postgraduate_participate_project where postgraduate_id = #{postgraduateId}
+    </delete>
+
+</mapper>

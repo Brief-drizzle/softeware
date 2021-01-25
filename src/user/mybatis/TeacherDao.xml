@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user.dao.TeacherDao">
+
+    <resultMap type="user.entity.Teacher" id="TeacherMap">
+        <result property="teacherId" column="teacher_id" jdbcType="VARCHAR"/>
+        <result property="teacherName" column="teacher_name" jdbcType="VARCHAR"/>
+        <result property="teacherStatus" column="teacher_status" jdbcType="VARCHAR"/>
+        <result property="teacherPhone" column="teacher_phone" jdbcType="VARCHAR"/>
+        <result property="teacherBirth" column="teacher_birth" jdbcType="OTHER"/>
+        <result property="teacherEmail" column="teacher_email" jdbcType="VARCHAR"/>
+        <result property="teacherSex" column="teacher_sex" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TeacherMap">
+        select
+          teacher_id, teacher_name, teacher_status, teacher_phone, teacher_birth, teacher_email, teacher_sex
+        from software.teacher
+        where teacher_id = #{teacherId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TeacherMap">
+        select
+          teacher_id, teacher_name, teacher_status, teacher_phone, teacher_birth, teacher_email, teacher_sex
+        from software.teacher
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TeacherMap">
+        select
+        teacher_id, teacher_name, teacher_status, teacher_phone, teacher_birth, teacher_email, teacher_sex
+        from software.teacher
+        <where>
+            <if test="teacherId != null and teacherId != ''">
+                and teacher_id = #{teacherId}
+            </if>
+            <if test="teacherName != null and teacherName != ''">
+                and teacher_name = #{teacherName}
+            </if>
+            <if test="teacherStatus != null and teacherStatus != ''">
+                and teacher_status = #{teacherStatus}
+            </if>
+            <if test="teacherPhone != null and teacherPhone != ''">
+                and teacher_phone = #{teacherPhone}
+            </if>
+            <if test="teacherBirth != null">
+                and teacher_birth = #{teacherBirth}
+            </if>
+            <if test="teacherEmail != null and teacherEmail != ''">
+                and teacher_email = #{teacherEmail}
+            </if>
+            <if test="teacherSex != null and teacherSex != ''">
+                and teacher_sex = #{teacherSex}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="teacherId" useGeneratedKeys="true">
+        insert into software.teacher(teacher_name, teacher_status, teacher_phone, teacher_birth, teacher_email, teacher_sex)
+        values (#{teacherName}, #{teacherStatus}, #{teacherPhone}, #{teacherBirth}, #{teacherEmail}, #{teacherSex})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="teacherId" useGeneratedKeys="true">
+        insert into software.teacher(teacher_name, teacher_status, teacher_phone, teacher_birth, teacher_email,
+        teacher_sex)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.teacherName}, #{entity.teacherStatus}, #{entity.teacherPhone}, #{entity.teacherBirth},
+            #{entity.teacherEmail}, #{entity.teacherSex})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="teacherId" useGeneratedKeys="true">
+        insert into software.teacher(teacher_name, teacher_status, teacher_phone, teacher_birth, teacher_email,
+        teacher_sex)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.teacherName}, #{entity.teacherStatus}, #{entity.teacherPhone}, #{entity.teacherBirth},
+            #{entity.teacherEmail}, #{entity.teacherSex})
+        </foreach>
+        on duplicate key update
+        teacher_name = values(teacher_name) , teacher_status = values(teacher_status) , teacher_phone =
+        values(teacher_phone) , teacher_birth = values(teacher_birth) , teacher_email = values(teacher_email) ,
+        teacher_sex = values(teacher_sex)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update software.teacher
+        <set>
+            <if test="teacherName != null and teacherName != ''">
+                teacher_name = #{teacherName},
+            </if>
+            <if test="teacherStatus != null and teacherStatus != ''">
+                teacher_status = #{teacherStatus},
+            </if>
+            <if test="teacherPhone != null and teacherPhone != ''">
+                teacher_phone = #{teacherPhone},
+            </if>
+            <if test="teacherBirth != null">
+                teacher_birth = #{teacherBirth},
+            </if>
+            <if test="teacherEmail != null and teacherEmail != ''">
+                teacher_email = #{teacherEmail},
+            </if>
+            <if test="teacherSex != null and teacherSex != ''">
+                teacher_sex = #{teacherSex},
+            </if>
+        </set>
+        where teacher_id = #{teacherId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from software.teacher where teacher_id = #{teacherId}
+    </delete>
+
+</mapper>

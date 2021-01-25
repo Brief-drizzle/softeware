@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user.dao.CourseDao">
+
+    <resultMap type="user.entity.Course" id="CourseMap">
+        <result property="courseId" column="course_id" jdbcType="VARCHAR"/>
+        <result property="assessmentId" column="assessment_id" jdbcType="VARCHAR"/>
+        <result property="courseName" column="course_name" jdbcType="VARCHAR"/>
+        <result property="courseNature" column="course_nature" jdbcType="VARCHAR"/>
+        <result property="courseStarttime" column="course_starttime" jdbcType="OTHER"/>
+        <result property="courseEndtime" column="course_endtime" jdbcType="OTHER"/>
+        <result property="courseAudience" column="course_audience" jdbcType="VARCHAR"/>
+        <result property="courseStudentnum" column="course_studentnum" jdbcType="INTEGER"/>
+        <result property="courseTeachtime" column="course_teachtime" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="CourseMap">
+        select
+          course_id, assessment_id, course_name, course_nature, course_starttime, course_endtime, course_audience, course_studentnum, course_teachtime
+        from software.course
+        where course_id = #{courseId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="CourseMap">
+        select
+          course_id, assessment_id, course_name, course_nature, course_starttime, course_endtime, course_audience, course_studentnum, course_teachtime
+        from software.course
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="CourseMap">
+        select
+        course_id, assessment_id, course_name, course_nature, course_starttime, course_endtime, course_audience,
+        course_studentnum, course_teachtime
+        from software.course
+        <where>
+            <if test="courseId != null and courseId != ''">
+                and course_id = #{courseId}
+            </if>
+            <if test="assessmentId != null and assessmentId != ''">
+                and assessment_id = #{assessmentId}
+            </if>
+            <if test="courseName != null and courseName != ''">
+                and course_name = #{courseName}
+            </if>
+            <if test="courseNature != null and courseNature != ''">
+                and course_nature = #{courseNature}
+            </if>
+            <if test="courseStarttime != null">
+                and course_starttime = #{courseStarttime}
+            </if>
+            <if test="courseEndtime != null">
+                and course_endtime = #{courseEndtime}
+            </if>
+            <if test="courseAudience != null and courseAudience != ''">
+                and course_audience = #{courseAudience}
+            </if>
+            <if test="courseStudentnum != null">
+                and course_studentnum = #{courseStudentnum}
+            </if>
+            <if test="courseTeachtime != null">
+                and course_teachtime = #{courseTeachtime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="courseId" useGeneratedKeys="true">
+        insert into software.course(assessment_id, course_name, course_nature, course_starttime, course_endtime, course_audience, course_studentnum, course_teachtime)
+        values (#{assessmentId}, #{courseName}, #{courseNature}, #{courseStarttime}, #{courseEndtime}, #{courseAudience}, #{courseStudentnum}, #{courseTeachtime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="courseId" useGeneratedKeys="true">
+        insert into software.course(assessment_id, course_name, course_nature, course_starttime, course_endtime,
+        course_audience, course_studentnum, course_teachtime)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.assessmentId}, #{entity.courseName}, #{entity.courseNature}, #{entity.courseStarttime},
+            #{entity.courseEndtime}, #{entity.courseAudience}, #{entity.courseStudentnum}, #{entity.courseTeachtime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="courseId" useGeneratedKeys="true">
+        insert into software.course(assessment_id, course_name, course_nature, course_starttime, course_endtime,
+        course_audience, course_studentnum, course_teachtime)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.assessmentId}, #{entity.courseName}, #{entity.courseNature}, #{entity.courseStarttime},
+            #{entity.courseEndtime}, #{entity.courseAudience}, #{entity.courseStudentnum}, #{entity.courseTeachtime})
+        </foreach>
+        on duplicate key update
+        assessment_id = values(assessment_id) , course_name = values(course_name) , course_nature =
+        values(course_nature) , course_starttime = values(course_starttime) , course_endtime = values(course_endtime) ,
+        course_audience = values(course_audience) , course_studentnum = values(course_studentnum) , course_teachtime =
+        values(course_teachtime)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update software.course
+        <set>
+            <if test="assessmentId != null and assessmentId != ''">
+                assessment_id = #{assessmentId},
+            </if>
+            <if test="courseName != null and courseName != ''">
+                course_name = #{courseName},
+            </if>
+            <if test="courseNature != null and courseNature != ''">
+                course_nature = #{courseNature},
+            </if>
+            <if test="courseStarttime != null">
+                course_starttime = #{courseStarttime},
+            </if>
+            <if test="courseEndtime != null">
+                course_endtime = #{courseEndtime},
+            </if>
+            <if test="courseAudience != null and courseAudience != ''">
+                course_audience = #{courseAudience},
+            </if>
+            <if test="courseStudentnum != null">
+                course_studentnum = #{courseStudentnum},
+            </if>
+            <if test="courseTeachtime != null">
+                course_teachtime = #{courseTeachtime},
+            </if>
+        </set>
+        where course_id = #{courseId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from software.course where course_id = #{courseId}
+    </delete>
+
+</mapper>
