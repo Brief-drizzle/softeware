@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user.dao.AcademicExchangeFileDao">
+
+    <resultMap type="user.entity.AcademicExchangeFile" id="AcademicExchangeFileMap">
+        <result property="academicExchangeFileId" column="academic_exchange_file_id" jdbcType="VARCHAR"/>
+        <result property="teacherId" column="teacher_id" jdbcType="VARCHAR"/>
+        <result property="aeApplyStatus" column="ae_apply_status" jdbcType="VARCHAR"/>
+        <result property="aeJoinStatus" column="ae_join_status" jdbcType="VARCHAR"/>
+        <result property="aeFinishStatus" column="ae_finish_status" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="AcademicExchangeFileMap">
+        select
+          academic_exchange_file_id, teacher_id, ae_apply_status, ae_join_status, ae_finish_status
+        from software.academic_exchange_file
+        where academic_exchange_file_id = #{academicExchangeFileId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="AcademicExchangeFileMap">
+        select
+          academic_exchange_file_id, teacher_id, ae_apply_status, ae_join_status, ae_finish_status
+        from software.academic_exchange_file
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="AcademicExchangeFileMap">
+        select
+        academic_exchange_file_id, teacher_id, ae_apply_status, ae_join_status, ae_finish_status
+        from software.academic_exchange_file
+        <where>
+            <if test="academicExchangeFileId != null and academicExchangeFileId != ''">
+                and academic_exchange_file_id = #{academicExchangeFileId}
+            </if>
+            <if test="teacherId != null and teacherId != ''">
+                and teacher_id = #{teacherId}
+            </if>
+            <if test="aeApplyStatus != null and aeApplyStatus != ''">
+                and ae_apply_status = #{aeApplyStatus}
+            </if>
+            <if test="aeJoinStatus != null and aeJoinStatus != ''">
+                and ae_join_status = #{aeJoinStatus}
+            </if>
+            <if test="aeFinishStatus != null and aeFinishStatus != ''">
+                and ae_finish_status = #{aeFinishStatus}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="academicExchangeFileId" useGeneratedKeys="true">
+        insert into software.academic_exchange_file(teacher_id, ae_apply_status, ae_join_status, ae_finish_status)
+        values (#{teacherId}, #{aeApplyStatus}, #{aeJoinStatus}, #{aeFinishStatus})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="academicExchangeFileId" useGeneratedKeys="true">
+        insert into software.academic_exchange_file(teacher_id, ae_apply_status, ae_join_status, ae_finish_status)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.teacherId}, #{entity.aeApplyStatus}, #{entity.aeJoinStatus}, #{entity.aeFinishStatus})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="academicExchangeFileId" useGeneratedKeys="true">
+        insert into software.academic_exchange_file(teacher_id, ae_apply_status, ae_join_status, ae_finish_status)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.teacherId}, #{entity.aeApplyStatus}, #{entity.aeJoinStatus}, #{entity.aeFinishStatus})
+        </foreach>
+        on duplicate key update
+        teacher_id = values(teacher_id) , ae_apply_status = values(ae_apply_status) , ae_join_status =
+        values(ae_join_status) , ae_finish_status = values(ae_finish_status)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update software.academic_exchange_file
+        <set>
+            <if test="teacherId != null and teacherId != ''">
+                teacher_id = #{teacherId},
+            </if>
+            <if test="aeApplyStatus != null and aeApplyStatus != ''">
+                ae_apply_status = #{aeApplyStatus},
+            </if>
+            <if test="aeJoinStatus != null and aeJoinStatus != ''">
+                ae_join_status = #{aeJoinStatus},
+            </if>
+            <if test="aeFinishStatus != null and aeFinishStatus != ''">
+                ae_finish_status = #{aeFinishStatus},
+            </if>
+        </set>
+        where academic_exchange_file_id = #{academicExchangeFileId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from software.academic_exchange_file where academic_exchange_file_id = #{academicExchangeFileId}
+    </delete>
+
+</mapper>

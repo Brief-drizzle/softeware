@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user.dao.InstructorDao">
+
+    <resultMap type="user.entity.Instructor" id="InstructorMap">
+        <result property="instructorId" column="instructor_id" jdbcType="VARCHAR"/>
+        <result property="teacherId" column="teacher_id" jdbcType="VARCHAR"/>
+        <result property="isinstructor" column="isinstructor" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="InstructorMap">
+        select
+          instructor_id, teacher_id, isinstructor
+        from software.instructor
+        where instructor_id = #{instructorId}
+    </select>
+    <select id="queryByteaId" resultMap="InstructorMap">
+        select
+          instructor_id, teacher_id, isinstructor
+        from software.instructor
+        where teacher_id = #{teaId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="InstructorMap">
+        select
+          instructor_id, teacher_id, isinstructor
+        from software.instructor
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="InstructorMap">
+        select
+        instructor_id, teacher_id, isinstructor
+        from software.instructor
+        <where>
+            <if test="instructorId != null and instructorId != ''">
+                and instructor_id = #{instructorId}
+            </if>
+            <if test="teacherId != null and teacherId != ''">
+                and teacher_id = #{teacherId}
+            </if>
+            <if test="isinstructor != null">
+                and isinstructor = #{isinstructor}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="instructorId" useGeneratedKeys="true">
+        insert into software.instructor(teacher_id, isinstructor)
+        values (#{teacherId}, #{isinstructor})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="instructorId" useGeneratedKeys="true">
+        insert into software.instructor(teacher_id, isinstructor)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.teacherId}, #{entity.isinstructor})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="instructorId" useGeneratedKeys="true">
+        insert into software.instructor(teacher_id, isinstructor)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.teacherId}, #{entity.isinstructor})
+        </foreach>
+        on duplicate key update
+        teacher_id = values(teacher_id) , isinstructor = values(isinstructor)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update software.instructor
+        <set>
+            <if test="teacherId != null and teacherId != ''">
+                teacher_id = #{teacherId},
+            </if>
+            <if test="isinstructor != null">
+                isinstructor = #{isinstructor},
+            </if>
+        </set>
+        where instructor_id = #{instructorId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from software.instructor where instructor_id = #{instructorId}
+    </delete>
+
+</mapper>

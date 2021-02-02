@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user.dao.PeopleDao">
+
+    <resultMap type="user.entity.People" id="PeopleMap">
+        <result property="peopleId" column="people_id" jdbcType="VARCHAR"/>
+        <result property="peoplecategoryId" column="peoplecategory_id" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="lastlogintime" column="lastlogintime" jdbcType="TIMESTAMP"/>
+        <result property="lastloginip" column="lastloginip" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="PeopleMap">
+        select
+          people_id, peoplecategory_id, password, lastlogintime, lastloginip
+        from software.people
+        where people_id = #{peopleId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="PeopleMap">
+        select
+          people_id, peoplecategory_id, password, lastlogintime, lastloginip
+        from software.people
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="PeopleMap">
+        select
+        people_id, peoplecategory_id, password, lastlogintime, lastloginip
+        from software.people
+        <where>
+            <if test="peopleId != null and peopleId != ''">
+                and people_id = #{peopleId}
+            </if>
+            <if test="peoplecategoryId != null and peoplecategoryId != ''">
+                and peoplecategory_id = #{peoplecategoryId}
+            </if>
+            <if test="password != null and password != ''">
+                and password = #{password}
+            </if>
+            <if test="lastlogintime != null">
+                and lastlogintime = #{lastlogintime}
+            </if>
+            <if test="lastloginip != null and lastloginip != ''">
+                and lastloginip = #{lastloginip}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="peopleId" useGeneratedKeys="true">
+        insert into software.people(peoplecategory_id, password, lastlogintime, lastloginip)
+        values (#{peoplecategoryId}, #{password}, #{lastlogintime}, #{lastloginip})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="peopleId" useGeneratedKeys="true">
+        insert into software.people(peoplecategory_id, password, lastlogintime, lastloginip)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.peoplecategoryId}, #{entity.password}, #{entity.lastlogintime}, #{entity.lastloginip})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="peopleId" useGeneratedKeys="true">
+        insert into software.people(peoplecategory_id, password, lastlogintime, lastloginip)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.peoplecategoryId}, #{entity.password}, #{entity.lastlogintime}, #{entity.lastloginip})
+        </foreach>
+        on duplicate key update
+        peoplecategory_id = values(peoplecategory_id) , password = values(password) , lastlogintime =
+        values(lastlogintime) , lastloginip = values(lastloginip)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update software.people
+        <set>
+            <if test="peoplecategoryId != null and peoplecategoryId != ''">
+                peoplecategory_id = #{peoplecategoryId},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="lastlogintime != null">
+                lastlogintime = #{lastlogintime},
+            </if>
+            <if test="lastloginip != null and lastloginip != ''">
+                lastloginip = #{lastloginip},
+            </if>
+        </set>
+        where people_id = #{peopleId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from software.people where people_id = #{peopleId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user.dao.AcademicExchangeDao">
+
+    <resultMap type="user.entity.AcademicExchange" id="AcademicExchangeMap">
+        <result property="academicExchangeId" column="academic_exchange_id" jdbcType="VARCHAR"/>
+        <result property="postgraduateId" column="postgraduate_id" jdbcType="VARCHAR"/>
+        <result property="tutorId" column="tutor_id" jdbcType="VARCHAR"/>
+        <result property="directorId" column="director_id" jdbcType="VARCHAR"/>
+        <result property="academicExchangeName" column="academic_exchange_name" jdbcType="VARCHAR"/>
+        <result property="reportEnglishname" column="report_englishname" jdbcType="VARCHAR"/>
+        <result property="reportChinesename" column="report_chinesename" jdbcType="VARCHAR"/>
+        <result property="country" column="country" jdbcType="VARCHAR"/>
+        <result property="province" column="province" jdbcType="VARCHAR"/>
+        <result property="city" column="city" jdbcType="VARCHAR"/>
+        <result property="quality" column="quality" jdbcType="INTEGER"/>
+        <result property="activityPhoto" column="activity_photo" jdbcType="VARCHAR"/>
+        <result property="others" column="others" jdbcType="VARCHAR"/>
+        <result property="auditStatus" column="audit_status" jdbcType="INTEGER"/>
+        <result property="tutorAuditTime" column="tutor_audit_time" jdbcType="TIMESTAMP"/>
+        <result property="directorAuditTime" column="director_audit_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="AcademicExchangeMap">
+        select
+          academic_exchange_id, postgraduate_id, tutor_id, director_id, academic_exchange_name, report_englishname, report_chinesename, country, province, city, quality, activity_photo, others, audit_status, tutor_audit_time, director_audit_time
+        from software.academic_exchange
+        where academic_exchange_id = #{academicExchangeId}
+    </select>
+
+    <select id="queryNumber" resultType="int">
+        select count(*) from software.academic_exchange
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="AcademicExchangeMap">
+        select
+          academic_exchange_id, postgraduate_id, tutor_id, director_id, academic_exchange_name, report_englishname, report_chinesename, country, province, city, quality, activity_photo, others, audit_status, tutor_audit_time, director_audit_time
+        from software.academic_exchange
+        <if test="self != null and self != ''">
+            where postgraduate_id = #{self}
+        </if>
+        limit #{offset}, #{limit}
+    </select>
+
+    <update id="approval">
+        update software.academic_exchange set tutor_audit_time = now()
+    </update>
+
+    <update id="approvalFromDirector">
+        update software.academic_exchange set director_audit_time = now()
+    </update>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="AcademicExchangeMap">
+        select
+        academic_exchange_id, postgraduate_id, tutor_id, director_id, academic_exchange_name, report_englishname,
+        report_chinesename, country, province, city, quality, activity_photo, others, audit_status, tutor_audit_time,
+        director_audit_time
+        from software.academic_exchange
+        <where>
+            <if test="academicExchangeId != null and academicExchangeId != ''">
+                and academic_exchange_id = #{academicExchangeId}
+            </if>
+            <if test="postgraduateId != null and postgraduateId != ''">
+                and postgraduate_id = #{postgraduateId}
+            </if>
+            <if test="tutorId != null and tutorId != ''">
+                and tutor_id = #{tutorId}
+            </if>
+            <if test="directorId != null and directorId != ''">
+                and director_id = #{directorId}
+            </if>
+            <if test="academicExchangeName != null and academicExchangeName != ''">
+                and academic_exchange_name = #{academicExchangeName}
+            </if>
+            <if test="reportEnglishname != null and reportEnglishname != ''">
+                and report_englishname = #{reportEnglishname}
+            </if>
+            <if test="reportChinesename != null and reportChinesename != ''">
+                and report_chinesename = #{reportChinesename}
+            </if>
+            <if test="country != null and country != ''">
+                and country = #{country}
+            </if>
+            <if test="province != null and province != ''">
+                and province = #{province}
+            </if>
+            <if test="city != null and city != ''">
+                and city = #{city}
+            </if>
+            <if test="quality != null">
+                and quality = #{quality}
+            </if>
+            <if test="activityPhoto != null and activityPhoto != ''">
+                and activity_photo = #{activityPhoto}
+            </if>
+            <if test="others != null and others != ''">
+                and others = #{others}
+            </if>
+            <if test="auditStatus != null">
+                and audit_status = #{auditStatus}
+            </if>
+            <if test="tutorAuditTime != null">
+                and tutor_audit_time = #{tutorAuditTime}
+            </if>
+            <if test="directorAuditTime != null">
+                and director_audit_time = #{directorAuditTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="academicExchangeId" useGeneratedKeys="true">
+        insert into software.academic_exchange(academic_exchange_id, postgraduate_id, tutor_id, director_id, academic_exchange_name, report_englishname, report_chinesename, country, province, city, quality, activity_photo, others, audit_status, tutor_audit_time, director_audit_time)
+        values (#{academicExchangeId},#{postgraduateId}, #{tutorId}, #{directorId}, #{academicExchangeName}, #{reportEnglishname}, #{reportChinesename}, #{country}, #{province}, #{city}, #{quality}, #{activityPhoto}, #{others}, #{auditStatus}, #{tutorAuditTime}, #{directorAuditTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="academicExchangeId" useGeneratedKeys="true">
+        insert into software.academic_exchange(postgraduate_id, tutor_id, director_id, academic_exchange_name,
+        report_englishname, report_chinesename, country, province, city, quality, activity_photo, others, audit_status,
+        tutor_audit_time, director_audit_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.postgraduateId}, #{entity.tutorId}, #{entity.directorId}, #{entity.academicExchangeName},
+            #{entity.reportEnglishname}, #{entity.reportChinesename}, #{entity.country}, #{entity.province},
+            #{entity.city}, #{entity.quality}, #{entity.activityPhoto}, #{entity.others}, #{entity.auditStatus},
+            #{entity.tutorAuditTime}, #{entity.directorAuditTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="academicExchangeId" useGeneratedKeys="true">
+        insert into software.academic_exchange(postgraduate_id, tutor_id, director_id, academic_exchange_name,
+        report_englishname, report_chinesename, country, province, city, quality, activity_photo, others, audit_status,
+        tutor_audit_time, director_audit_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.postgraduateId}, #{entity.tutorId}, #{entity.directorId}, #{entity.academicExchangeName},
+            #{entity.reportEnglishname}, #{entity.reportChinesename}, #{entity.country}, #{entity.province},
+            #{entity.city}, #{entity.quality}, #{entity.activityPhoto}, #{entity.others}, #{entity.auditStatus},
+            #{entity.tutorAuditTime}, #{entity.directorAuditTime})
+        </foreach>
+        on duplicate key update
+        postgraduate_id = values(postgraduate_id) , tutor_id = values(tutor_id) , director_id = values(director_id) ,
+        academic_exchange_name = values(academic_exchange_name) , report_englishname = values(report_englishname) ,
+        report_chinesename = values(report_chinesename) , country = values(country) , province = values(province) , city
+        = values(city) , quality = values(quality) , activity_photo = values(activity_photo) , others = values(others) ,
+        audit_status = values(audit_status) , tutor_audit_time = values(tutor_audit_time) , director_audit_time =
+        values(director_audit_time)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update software.academic_exchange
+        <set>
+            <if test="postgraduateId != null and postgraduateId != ''">
+                postgraduate_id = #{postgraduateId},
+            </if>
+            <if test="tutorId != null and tutorId != ''">
+                tutor_id = #{tutorId},
+            </if>
+            <if test="directorId != null and directorId != ''">
+                director_id = #{directorId},
+            </if>
+            <if test="academicExchangeName != null and academicExchangeName != ''">
+                academic_exchange_name = #{academicExchangeName},
+            </if>
+            <if test="reportEnglishname != null and reportEnglishname != ''">
+                report_englishname = #{reportEnglishname},
+            </if>
+            <if test="reportChinesename != null and reportChinesename != ''">
+                report_chinesename = #{reportChinesename},
+            </if>
+            <if test="country != null and country != ''">
+                country = #{country},
+            </if>
+            <if test="province != null and province != ''">
+                province = #{province},
+            </if>
+            <if test="city != null and city != ''">
+                city = #{city},
+            </if>
+            <if test="quality != null">
+                quality = #{quality},
+            </if>
+            <if test="activityPhoto != null and activityPhoto != ''">
+                activity_photo = #{activityPhoto},
+            </if>
+            <if test="others != null and others != ''">
+                others = #{others},
+            </if>
+            <if test="auditStatus != null">
+                audit_status = #{auditStatus},
+            </if>
+            <if test="tutorAuditTime != null">
+                tutor_audit_time = #{tutorAuditTime},
+            </if>
+            <if test="directorAuditTime != null">
+                director_audit_time = #{directorAuditTime},
+            </if>
+        </set>
+        where academic_exchange_id = #{academicExchangeId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from software.academic_exchange where academic_exchange_id = #{academicExchangeId}
+    </delete>
+
+</mapper>

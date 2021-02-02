@@ -15,6 +15,12 @@
         from software.assistant_qualification
         where assistant_qualification_id = #{assistantQualificationId}
     </select>
+    <select id="queryByacademyId" resultMap="AssistantQualificationMap">
+        select
+          assistant_qualification_id, academy_id, academy_require
+        from software.assistant_qualification
+        where academy_id = #{academyId}
+    </select>
 
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="AssistantQualificationMap">

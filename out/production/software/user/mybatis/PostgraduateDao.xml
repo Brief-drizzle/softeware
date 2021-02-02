@@ -28,6 +28,11 @@
         from software.postgraduate
         limit #{offset}, #{limit}
     </select>
+    <select id="listAll" resultMap="PostgraduateMap">
+        select
+        *
+        from software.postgraduate
+    </select>
 
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="PostgraduateMap">

@@ -21,7 +21,7 @@ public interface TeachDao {
      * @param instructorId 主键
      * @return 实例对象
      */
-    Teach queryById(String instructorId);
+    List<Teach> queryById(String instructorId);
 
     /**
      * 查询指定行数据

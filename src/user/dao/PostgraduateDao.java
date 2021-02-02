@@ -40,6 +40,7 @@ public interface PostgraduateDao {
      * @return 对象列表
      */
     List<Postgraduate> queryAll(Postgraduate postgraduate);
+    List<Postgraduate> listAll();
 
     /**
      * 新增数据

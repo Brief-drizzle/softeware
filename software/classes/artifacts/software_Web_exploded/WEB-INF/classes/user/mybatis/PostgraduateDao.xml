@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user.dao.PostgraduateDao">
+
+    <resultMap type="user.entity.Postgraduate" id="PostgraduateMap">
+        <result property="postgraduateId" column="postgraduate_id" jdbcType="VARCHAR"/>
+        <result property="teacherId" column="teacher_id" jdbcType="VARCHAR"/>
+        <result property="academyId" column="academy_id" jdbcType="VARCHAR"/>
+        <result property="postgraduateName" column="postgraduate_name" jdbcType="VARCHAR"/>
+        <result property="postgraduatePhone" column="postgraduate_phone" jdbcType="VARCHAR"/>
+        <result property="postgraduateEmail" column="postgraduate_email" jdbcType="VARCHAR"/>
+        <result property="postgraduateBirth" column="postgraduate_birth" jdbcType="OTHER"/>
+        <result property="postgraduateSex" column="postgraduate_sex" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="PostgraduateMap">
+        select
+          postgraduate_id, teacher_id, academy_id, postgraduate_name, postgraduate_phone, postgraduate_email, postgraduate_birth, postgraduate_sex
+        from software.postgraduate
+        where postgraduate_id = #{postgraduateId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="PostgraduateMap">
+        select
+          postgraduate_id, teacher_id, academy_id, postgraduate_name, postgraduate_phone, postgraduate_email, postgraduate_birth, postgraduate_sex
+        from software.postgraduate
+        <if test="teacherId != null and teacherId != ''">
+            where teacher_id = #{teacherId}
+        </if>
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="queryNumber" resultType="int">
+        select count(*) from software.postgraduate
+        <if test="teacherId != null and teacherId != ''">
+            where teacher_id = #{teacherId}
+        </if>
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="PostgraduateMap">
+        select
+        postgraduate_id, teacher_id, academy_id, postgraduate_name, postgraduate_phone, postgraduate_email,
+        postgraduate_birth, postgraduate_sex
+        from software.postgraduate
+        <where>
+            <if test="postgraduateId != null and postgraduateId != ''">
+                and postgraduate_id = #{postgraduateId}
+            </if>
+            <if test="teacherId != null and teacherId != ''">
+                and teacher_id = #{teacherId}
+            </if>
+            <if test="academyId != null and academyId != ''">
+                and academy_id = #{academyId}
+            </if>
+            <if test="postgraduateName != null and postgraduateName != ''">
+                and postgraduate_name = #{postgraduateName}
+            </if>
+            <if test="postgraduatePhone != null and postgraduatePhone != ''">
+                and postgraduate_phone = #{postgraduatePhone}
+            </if>
+            <if test="postgraduateEmail != null and postgraduateEmail != ''">
+                and postgraduate_email = #{postgraduateEmail}
+            </if>
+            <if test="postgraduateBirth != null">
+                and postgraduate_birth = #{postgraduateBirth}
+            </if>
+            <if test="postgraduateSex != null and postgraduateSex != ''">
+                and postgraduate_sex = #{postgraduateSex}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="postgraduateId" useGeneratedKeys="true">
+        insert into software.postgraduate(teacher_id, academy_id, postgraduate_name, postgraduate_phone, postgraduate_email, postgraduate_birth, postgraduate_sex)
+        values (#{teacherId}, #{academyId}, #{postgraduateName}, #{postgraduatePhone}, #{postgraduateEmail}, #{postgraduateBirth}, #{postgraduateSex})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="postgraduateId" useGeneratedKeys="true">
+        insert into software.postgraduate(teacher_id, academy_id, postgraduate_name, postgraduate_phone,
+        postgraduate_email, postgraduate_birth, postgraduate_sex)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.teacherId}, #{entity.academyId}, #{entity.postgraduateName}, #{entity.postgraduatePhone},
+            #{entity.postgraduateEmail}, #{entity.postgraduateBirth}, #{entity.postgraduateSex})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="postgraduateId" useGeneratedKeys="true">
+        insert into software.postgraduate(teacher_id, academy_id, postgraduate_name, postgraduate_phone,
+        postgraduate_email, postgraduate_birth, postgraduate_sex)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.teacherId}, #{entity.academyId}, #{entity.postgraduateName}, #{entity.postgraduatePhone},
+            #{entity.postgraduateEmail}, #{entity.postgraduateBirth}, #{entity.postgraduateSex})
+        </foreach>
+        on duplicate key update
+        teacher_id = values(teacher_id) , academy_id = values(academy_id) , postgraduate_name =
+        values(postgraduate_name) , postgraduate_phone = values(postgraduate_phone) , postgraduate_email =
+        values(postgraduate_email) , postgraduate_birth = values(postgraduate_birth) , postgraduate_sex =
+        values(postgraduate_sex)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update software.postgraduate
+        <set>
+            <if test="teacherId != null and teacherId != ''">
+                teacher_id = #{teacherId},
+            </if>
+            <if test="academyId != null and academyId != ''">
+                academy_id = #{academyId},
+            </if>
+            <if test="postgraduateName != null and postgraduateName != ''">
+                postgraduate_name = #{postgraduateName},
+            </if>
+            <if test="postgraduatePhone != null and postgraduatePhone != ''">
+                postgraduate_phone = #{postgraduatePhone},
+            </if>
+            <if test="postgraduateEmail != null and postgraduateEmail != ''">
+                postgraduate_email = #{postgraduateEmail},
+            </if>
+            <if test="postgraduateBirth != null">
+                postgraduate_birth = #{postgraduateBirth},
+            </if>
+            <if test="postgraduateSex != null and postgraduateSex != ''">
+                postgraduate_sex = #{postgraduateSex},
+            </if>
+        </set>
+        where postgraduate_id = #{postgraduateId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from software.postgraduate where postgraduate_id = #{postgraduateId}
+    </delete>
+
+</mapper>

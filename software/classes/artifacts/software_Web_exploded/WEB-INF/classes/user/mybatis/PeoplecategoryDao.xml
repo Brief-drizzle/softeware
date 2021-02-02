@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user.dao.PeoplecategoryDao">
+
+    <resultMap type="user.entity.Peoplecategory" id="PeoplecategoryMap">
+        <result property="peoplecategoryId" column="peoplecategory_id" jdbcType="VARCHAR"/>
+        <result property="peoplecategoryName" column="peoplecategory_name" jdbcType="VARCHAR"/>
+        <result property="nowId" column="now_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="PeoplecategoryMap">
+        select
+          peoplecategory_id, peoplecategory_name, now_id
+        from software.peoplecategory
+        where peoplecategory_id = #{peoplecategoryId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="PeoplecategoryMap">
+        select
+          peoplecategory_id, peoplecategory_name, now_id
+        from software.peoplecategory
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="PeoplecategoryMap">
+        select
+        peoplecategory_id, peoplecategory_name, now_id
+        from software.peoplecategory
+        <where>
+            <if test="peoplecategoryId != null and peoplecategoryId != ''">
+                and peoplecategory_id = #{peoplecategoryId}
+            </if>
+            <if test="peoplecategoryName != null and peoplecategoryName != ''">
+                and peoplecategory_name = #{peoplecategoryName}
+            </if>
+            <if test="nowId != null">
+                and now_id = #{nowId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="peoplecategoryId" useGeneratedKeys="true">
+        insert into software.peoplecategory(peoplecategory_name, now_id)
+        values (#{peoplecategoryName}, #{nowId})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="peoplecategoryId" useGeneratedKeys="true">
+        insert into software.peoplecategory(peoplecategory_name, now_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.peoplecategoryName}, #{entity.nowId})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="peoplecategoryId" useGeneratedKeys="true">
+        insert into software.peoplecategory(peoplecategory_name, now_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.peoplecategoryName}, #{entity.nowId})
+        </foreach>
+        on duplicate key update
+        peoplecategory_name = values(peoplecategory_name) , now_id = values(now_id)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update software.peoplecategory
+        <set>
+            <if test="peoplecategoryName != null and peoplecategoryName != ''">
+                peoplecategory_name = #{peoplecategoryName},
+            </if>
+            <if test="nowId != null">
+                now_id = #{nowId},
+            </if>
+        </set>
+        where peoplecategory_id = #{peoplecategoryId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from software.peoplecategory where peoplecategory_id = #{peoplecategoryId}
+    </delete>
+
+</mapper>

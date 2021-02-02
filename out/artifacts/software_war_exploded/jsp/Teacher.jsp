@@ -41,7 +41,7 @@
                     }
                     if (instructor!=null){
                 %>
-                <li class="layui-nav-item"><a href="">授课教师</a></li>
+                <li class="layui-nav-item"><a href="${pageContext.request.contextPath}/course/enterinstru.do">授课教师</a></li>
                 <%
                     }
                 %>

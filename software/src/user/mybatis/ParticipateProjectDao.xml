@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user.dao.ParticipateProjectDao">
+
+    <resultMap type="user.entity.ParticipateProject" id="ParticipateProjectMap">
+        <result property="participateProjectId" column="participate_project_id" jdbcType="VARCHAR"/>
+        <result property="projectId" column="project_id" jdbcType="VARCHAR"/>
+        <result property="tutorId" column="tutor_id" jdbcType="VARCHAR"/>
+        <result property="mainwork" column="mainwork" jdbcType="VARCHAR"/>
+        <result property="participateStarttime" column="participate_starttime" jdbcType="OTHER"/>
+        <result property="participateEndtime" column="participate_endtime" jdbcType="OTHER"/>
+        <result property="participateApprovestatus" column="participate_approvestatus" jdbcType="INTEGER"/>
+        <result property="participateApprovetime" column="participate_approvetime" jdbcType="TIMESTAMP"/>
+        <result property="costequivalent" column="costequivalent" jdbcType="NUMERIC"/>
+        <result property="isdirector" column="isdirector" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ParticipateProjectMap">
+        select
+          participate_project_id, project_id, tutor_id, mainwork, participate_starttime, participate_endtime, participate_approvestatus, participate_approvetime, costequivalent, isdirector
+        from software.participate_project
+        where participate_project_id = #{participateProjectId}
+    </select>
+
+    <!--查询总数量-->
+    <select id="queryNumber" resultType="int">
+        select count(*) from software.participate_project
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="ParticipateProjectMap">
+        select
+          participate_project_id, project_id, tutor_id, mainwork, participate_starttime, participate_endtime, participate_approvestatus, participate_approvetime, costequivalent, isdirector
+        from software.participate_project
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="ParticipateProjectMap">
+        select
+        participate_project_id, project_id, tutor_id, mainwork, participate_starttime, participate_endtime,
+        participate_approvestatus, participate_approvetime, costequivalent, isdirector
+        from software.participate_project
+        <where>
+            <if test="participateProjectId != null and participateProjectId != ''">
+                and participate_project_id = #{participateProjectId}
+            </if>
+            <if test="projectId != null and projectId != ''">
+                and project_id = #{projectId}
+            </if>
+            <if test="tutorId != null and tutorId != ''">
+                and tutor_id = #{tutorId}
+            </if>
+            <if test="mainwork != null and mainwork != ''">
+                and mainwork = #{mainwork}
+            </if>
+            <if test="participateStarttime != null">
+                and participate_starttime = #{participateStarttime}
+            </if>
+            <if test="participateEndtime != null">
+                and participate_endtime = #{participateEndtime}
+            </if>
+            <if test="participateApprovestatus != null">
+                and participate_approvestatus = #{participateApprovestatus}
+            </if>
+            <if test="participateApprovetime != null">
+                and participate_approvetime = #{participateApprovetime}
+            </if>
+            <if test="costequivalent != null">
+                and costequivalent = #{costequivalent}
+            </if>
+            <if test="isdirector != null">
+                and isdirector = #{isdirector}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="participateProjectId" useGeneratedKeys="true">
+        insert into software.participate_project(participate_project_id,project_id, tutor_id, mainwork, participate_starttime, participate_endtime, participate_approvestatus, participate_approvetime, costequivalent, isdirector)
+        values (#{participateProjectId},#{projectId}, #{tutorId}, #{mainwork}, #{participateStarttime}, #{participateEndtime}, #{participateApprovestatus}, #{participateApprovetime}, #{costequivalent}, #{isdirector})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="participateProjectId" useGeneratedKeys="true">
+        insert into software.participate_project(project_id, tutor_id, mainwork, participate_starttime,
+        participate_endtime, participate_approvestatus, participate_approvetime, costequivalent, isdirector)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.projectId}, #{entity.tutorId}, #{entity.mainwork}, #{entity.participateStarttime},
+            #{entity.participateEndtime}, #{entity.participateApprovestatus}, #{entity.participateApprovetime},
+            #{entity.costequivalent}, #{entity.isdirector})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="participateProjectId" useGeneratedKeys="true">
+        insert into software.participate_project(project_id, tutor_id, mainwork, participate_starttime,
+        participate_endtime, participate_approvestatus, participate_approvetime, costequivalent, isdirector)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.projectId}, #{entity.tutorId}, #{entity.mainwork}, #{entity.participateStarttime},
+            #{entity.participateEndtime}, #{entity.participateApprovestatus}, #{entity.participateApprovetime},
+            #{entity.costequivalent}, #{entity.isdirector})
+        </foreach>
+        on duplicate key update
+        project_id = values(project_id) , tutor_id = values(tutor_id) , mainwork = values(mainwork) ,
+        participate_starttime = values(participate_starttime) , participate_endtime = values(participate_endtime) ,
+        participate_approvestatus = values(participate_approvestatus) , participate_approvetime =
+        values(participate_approvetime) , costequivalent = values(costequivalent) , isdirector = values(isdirector)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update software.participate_project
+        <set>
+            <if test="projectId != null and projectId != ''">
+                project_id = #{projectId},
+            </if>
+            <if test="tutorId != null and tutorId != ''">
+                tutor_id = #{tutorId},
+            </if>
+            <if test="mainwork != null and mainwork != ''">
+                mainwork = #{mainwork},
+            </if>
+            <if test="participateStarttime != null">
+                participate_starttime = #{participateStarttime},
+            </if>
+            <if test="participateEndtime != null">
+                participate_endtime = #{participateEndtime},
+            </if>
+            <if test="participateApprovestatus != null">
+                participate_approvestatus = #{participateApprovestatus},
+            </if>
+            <if test="participateApprovetime != null">
+                participate_approvetime = #{participateApprovetime},
+            </if>
+            <if test="costequivalent != null">
+                costequivalent = #{costequivalent},
+            </if>
+            <if test="isdirector != null">
+                isdirector = #{isdirector},
+            </if>
+        </set>
+        where participate_project_id = #{participateProjectId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from software.participate_project where participate_project_id = #{participateProjectId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user.dao.ParticipateProblemFileDao">
+
+    <resultMap type="user.entity.ParticipateProblemFile" id="ParticipateProblemFileMap">
+        <result property="problemFileid" column="problem_fileid" jdbcType="VARCHAR"/>
+        <result property="teacherId" column="teacher_id" jdbcType="VARCHAR"/>
+        <result property="problemDescription" column="problem_description" jdbcType="VARCHAR"/>
+        <result property="solveProcess" column="solve_process" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ParticipateProblemFileMap">
+        select
+          problem_fileid, teacher_id, problem_description, solve_process
+        from software.participate_problem_file
+        where problem_fileid = #{problemFileid}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="ParticipateProblemFileMap">
+        select
+          problem_fileid, teacher_id, problem_description, solve_process
+        from software.participate_problem_file
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--查询总数量-->
+    <select id="queryNumber" resultType="int">
+        select count(*) from software.participate_problem_file where participate_project_id=#{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryByPage" resultMap="ParticipateProblemFileMap">
+        select
+            problem_fileid, teacher_id, problem_description, solve_process
+        from software.participate_problem_file where participate_project_id=#{id}
+                 limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="ParticipateProblemFileMap">
+        select
+        problem_fileid, teacher_id, problem_description, solve_process
+        from software.participate_problem_file
+        <where>
+            <if test="problemFileid != null and problemFileid != ''">
+                and problem_fileid = #{problemFileid}
+            </if>
+            <if test="teacherId != null and teacherId != ''">
+                and teacher_id = #{teacherId}
+            </if>
+            <if test="problemDescription != null and problemDescription != ''">
+                and problem_description = #{problemDescription}
+            </if>
+            <if test="solveProcess != null and solveProcess != ''">
+                and solve_process = #{solveProcess}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="problemFileid" useGeneratedKeys="true">
+        insert into software.participate_problem_file(problem_fileid, teacher_id, problem_description, solve_process, participate_project_id)
+        values (#{problemFileid},#{teacherId}, #{problemDescription}, #{solveProcess},#{participateProjectId})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="problemFileid" useGeneratedKeys="true">
+        insert into software.participate_problem_file(teacher_id, problem_description, solve_process)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.teacherId}, #{entity.problemDescription}, #{entity.solveProcess})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="problemFileid" useGeneratedKeys="true">
+        insert into software.participate_problem_file(teacher_id, problem_description, solve_process)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.teacherId}, #{entity.problemDescription}, #{entity.solveProcess})
+        </foreach>
+        on duplicate key update
+        teacher_id = values(teacher_id) , problem_description = values(problem_description) , solve_process =
+        values(solve_process)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update software.participate_problem_file
+        <set>
+            <if test="teacherId != null and teacherId != ''">
+                teacher_id = #{teacherId},
+            </if>
+            <if test="problemDescription != null and problemDescription != ''">
+                problem_description = #{problemDescription},
+            </if>
+            <if test="solveProcess != null and solveProcess != ''">
+                solve_process = #{solveProcess},
+            </if>
+        </set>
+        where problem_fileid = #{problemFileid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from software.participate_problem_file where problem_fileid = #{problemFileid}
+    </delete>
+
+</mapper>

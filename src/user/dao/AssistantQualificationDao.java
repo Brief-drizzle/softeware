@@ -22,6 +22,7 @@ public interface AssistantQualificationDao {
      * @return 实例对象
      */
     AssistantQualification queryById(String assistantQualificationId);
+    AssistantQualification queryByacademyId(String academyId);
 
     /**
      * 查询指定行数据

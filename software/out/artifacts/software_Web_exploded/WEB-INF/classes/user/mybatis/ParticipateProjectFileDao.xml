@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user.dao.ParticipateProjectFileDao">
+
+    <resultMap type="user.entity.ParticipateProjectFile" id="ParticipateProjectFileMap">
+        <result property="participateProjectFileId" column="participate_project_file_id" jdbcType="VARCHAR"/>
+        <result property="teacherId" column="teacher_id" jdbcType="VARCHAR"/>
+        <result property="firstParticipateProject" column="first_participate_project" jdbcType="VARCHAR"/>
+        <result property="keyDifficulties" column="key_difficulties" jdbcType="VARCHAR"/>
+        <result property="endParticipateWork" column="end_participate_work" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ParticipateProjectFileMap">
+        select
+          participate_project_file_id, teacher_id, first_participate_project, key_difficulties, end_participate_work
+        from software.participate_project_file
+        where participate_project_file_id = #{participateProjectFileId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="ParticipateProjectFileMap">
+        select
+          participate_project_file_id, teacher_id, first_participate_project, key_difficulties, end_participate_work
+        from software.participate_project_file
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="ParticipateProjectFileMap">
+        select
+        participate_project_file_id, teacher_id, first_participate_project, key_difficulties, end_participate_work
+        from software.participate_project_file
+        <where>
+            <if test="participateProjectFileId != null and participateProjectFileId != ''">
+                and participate_project_file_id = #{participateProjectFileId}
+            </if>
+            <if test="teacherId != null and teacherId != ''">
+                and teacher_id = #{teacherId}
+            </if>
+            <if test="firstParticipateProject != null and firstParticipateProject != ''">
+                and first_participate_project = #{firstParticipateProject}
+            </if>
+            <if test="keyDifficulties != null and keyDifficulties != ''">
+                and key_difficulties = #{keyDifficulties}
+            </if>
+            <if test="endParticipateWork != null and endParticipateWork != ''">
+                and end_participate_work = #{endParticipateWork}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="participateProjectFileId" useGeneratedKeys="true">
+        insert into software.participate_project_file(teacher_id, first_participate_project, key_difficulties, end_participate_work, participate_project_file_id)
+        values (#{teacherId}, #{firstParticipateProject}, #{keyDifficulties}, #{endParticipateWork}, #{participateProjectFileId})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="participateProjectFileId" useGeneratedKeys="true">
+        insert into software.participate_project_file(teacher_id, first_participate_project, key_difficulties,
+        end_participate_work)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.teacherId}, #{entity.firstParticipateProject}, #{entity.keyDifficulties},
+            #{entity.endParticipateWork})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="participateProjectFileId" useGeneratedKeys="true">
+        insert into software.participate_project_file(teacher_id, first_participate_project, key_difficulties,
+        end_participate_work)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.teacherId}, #{entity.firstParticipateProject}, #{entity.keyDifficulties},
+            #{entity.endParticipateWork})
+        </foreach>
+        on duplicate key update
+        teacher_id = values(teacher_id) , first_participate_project = values(first_participate_project) ,
+        key_difficulties = values(key_difficulties) , end_participate_work = values(end_participate_work)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update software.participate_project_file
+        <set>
+            <if test="teacherId != null and teacherId != ''">
+                teacher_id = #{teacherId},
+            </if>
+            <if test="firstParticipateProject != null and firstParticipateProject != ''">
+                first_participate_project = #{firstParticipateProject},
+            </if>
+            <if test="keyDifficulties != null and keyDifficulties != ''">
+                key_difficulties = #{keyDifficulties},
+            </if>
+            <if test="endParticipateWork != null and endParticipateWork != ''">
+                end_participate_work = #{endParticipateWork},
+            </if>
+        </set>
+        where participate_project_file_id = #{participateProjectFileId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from software.participate_project_file where participate_project_file_id = #{participateProjectFileId}
+    </delete>
+
+</mapper>

@@ -22,7 +22,8 @@ public interface AssistantAssessmentDao {
      * @return 实例对象
      */
     AssistantAssessment queryById(String assessmentId);
-
+    AssistantAssessment queryByCoursePost(@Param("courseId") String courseId,@Param("postId") String postId);
+    AssistantAssessment getMax();
     /**
      * 查询指定行数据
      *
@@ -31,7 +32,9 @@ public interface AssistantAssessmentDao {
      * @return 对象列表
      */
     List<AssistantAssessment> queryAllByLimit(@Param("offset") int offset, @Param("limit") int limit);
-
+    List<AssistantAssessment> listAllByPost(String id);
+    List<AssistantAssessment> listAll();
+    List<AssistantAssessment> listAllByCourse(String courseid);
 
     /**
      * 通过实体作为筛选条件查询

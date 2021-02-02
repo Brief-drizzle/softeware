@@ -16,6 +16,18 @@
         from software.selection
         where selection_id = #{selectionId}
     </select>
+    <select id="getByPostandCourse" resultMap="SelectionMap">
+        select
+          selection_id, postgraduate_id, course_id, selection_time
+        from software.selection
+        where postgraduate_id=#{postid} and course_id=#{courseid}
+    </select>
+    <select id="getMax" resultMap="SelectionMap">
+        select
+        *
+        from software.selection
+        where selection_id=(select MAX(selection_id) from software.selection)
+    </select>
 
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="SelectionMap">
@@ -23,6 +35,23 @@
           selection_id, postgraduate_id, course_id, selection_time
         from software.selection
         limit #{offset}, #{limit}
+    </select>
+    <select id="getallByPostId" resultMap="SelectionMap">
+        select
+          *
+        from software.selection
+        where postgraduate_id=#{id}
+    </select>
+    <select id="getallByCourseId" resultMap="SelectionMap">
+        select
+          *
+        from software.selection
+        where course_id=#{courseId}
+    </select>
+    <select id="listAll" resultMap="SelectionMap">
+        select
+          *
+        from software.selection
     </select>
 
     <!--通过实体作为筛选条件查询-->
@@ -48,8 +77,8 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="selectionId" useGeneratedKeys="true">
-        insert into software.selection(postgraduate_id, course_id, selection_time)
-        values (#{postgraduateId}, #{courseId}, #{selectionTime})
+        insert into software.selection(selection_id,postgraduate_id, course_id, selection_time)
+        values (#{selectionId},#{postgraduateId}, #{courseId}, #{selectionTime})
     </insert>
 
     <insert id="insertBatch" keyProperty="selectionId" useGeneratedKeys="true">

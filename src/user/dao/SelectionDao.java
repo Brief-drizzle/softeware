@@ -22,7 +22,8 @@ public interface SelectionDao {
      * @return 实例对象
      */
     Selection queryById(String selectionId);
-
+    Selection getMax();
+    Selection getByPostandCourse(@Param("postid") String postid, @Param("courseid") String courseid);
     /**
      * 查询指定行数据
      *
@@ -31,7 +32,9 @@ public interface SelectionDao {
      * @return 对象列表
      */
     List<Selection> queryAllByLimit(@Param("offset") int offset, @Param("limit") int limit);
-
+    List<Selection> getallByPostId(String id);
+    List<Selection> getallByCourseId(String courseId);
+    List<Selection> listAll();
 
     /**
      * 通过实体作为筛选条件查询

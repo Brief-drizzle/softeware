@@ -19,6 +19,12 @@
         from software.assistant_assessment
         where assessment_id = #{assessmentId}
     </select>
+    <select id="queryByCoursePost" resultMap="AssistantAssessmentMap">
+        select
+        *
+        from software.assistant_assessment
+        where postgraduate_id=#{postId} and course_id=#{courseId}
+    </select>
 
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="AssistantAssessmentMap">
@@ -26,6 +32,23 @@
           assessment_id, postgraduate_id, course_id, instructor_id, self_account, instructor_evaluate, evaluate_result
         from software.assistant_assessment
         limit #{offset}, #{limit}
+    </select>
+    <select id="listAllByPost" resultMap="AssistantAssessmentMap">
+        select * from software.assistant_assessment
+        where postgraduate_id = #{id}
+    </select>
+    <select id="listAllByCourse" resultMap="AssistantAssessmentMap">
+        select * from software.assistant_assessment
+        where course_id = #{courseid}
+    </select>
+    <select id="listAll" resultMap="AssistantAssessmentMap">
+        select*from software.assistant_assessment
+    </select>
+    <select id="getMax" resultMap="AssistantAssessmentMap">
+        select
+        *
+        from software.assistant_assessment
+        where assessment_id=(select MAX(assessment_id) from software.assistant_assessment)
     </select>
 
     <!--通过实体作为筛选条件查询-->
@@ -60,8 +83,8 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="assessmentId" useGeneratedKeys="true">
-        insert into software.assistant_assessment(postgraduate_id, course_id, instructor_id, self_account, instructor_evaluate, evaluate_result)
-        values (#{postgraduateId}, #{courseId}, #{instructorId}, #{selfAccount}, #{instructorEvaluate}, #{evaluateResult})
+        insert into software.assistant_assessment(assessment_id, postgraduate_id, course_id, instructor_id, self_account, instructor_evaluate, evaluate_result)
+        values (#{assessmentId},#{postgraduateId}, #{courseId}, #{instructorId}, #{selfAccount}, #{instructorEvaluate}, #{evaluateResult})
     </insert>
 
     <insert id="insertBatch" keyProperty="assessmentId" useGeneratedKeys="true">
@@ -91,26 +114,13 @@
     <!--通过主键修改数据-->
     <update id="update">
         update software.assistant_assessment
-        <set>
-            <if test="postgraduateId != null and postgraduateId != ''">
-                postgraduate_id = #{postgraduateId},
-            </if>
-            <if test="courseId != null and courseId != ''">
-                course_id = #{courseId},
-            </if>
-            <if test="instructorId != null and instructorId != ''">
-                instructor_id = #{instructorId},
-            </if>
-            <if test="selfAccount != null and selfAccount != ''">
-                self_account = #{selfAccount},
-            </if>
-            <if test="instructorEvaluate != null and instructorEvaluate != ''">
-                instructor_evaluate = #{instructorEvaluate},
-            </if>
-            <if test="evaluateResult != null">
-                evaluate_result = #{evaluateResult},
-            </if>
-        </set>
+        set
+        postgraduate_id = #{postgraduateId},
+        course_id = #{courseId},
+        instructor_id = #{instructorId},
+        self_account = #{selfAccount},
+        instructor_evaluate = #{instructorEvaluate},
+        evaluate_result = #{evaluateResult}
         where assessment_id = #{assessmentId}
     </update>
 

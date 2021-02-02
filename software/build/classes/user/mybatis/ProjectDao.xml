@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user.dao.ProjectDao">
+
+    <resultMap type="user.entity.Project" id="ProjectMap">
+        <result property="projectId" column="project_id" jdbcType="VARCHAR"/>
+        <result property="categoryId" column="category_id" jdbcType="VARCHAR"/>
+        <result property="tutorId" column="tutor_id" jdbcType="VARCHAR"/>
+        <result property="projectName" column="project_name" jdbcType="VARCHAR"/>
+        <result property="starttime" column="starttime" jdbcType="OTHER"/>
+        <result property="endtime" column="endtime" jdbcType="OTHER"/>
+        <result property="allfunds" column="allfunds" jdbcType="NUMERIC"/>
+        <result property="approveStatus" column="approve_status" jdbcType="INTEGER"/>
+        <result property="approveTime" column="approve_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ProjectMap">
+        select
+          project_id, category_id, tutor_id, project_name, starttime, endtime, allfunds, approve_status, approve_time
+        from software.project
+        where project_id = #{projectId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="ProjectMap">
+        select
+          project_id, category_id, tutor_id, project_name, starttime, endtime, allfunds, approve_status, approve_time
+        from software.project
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="ProjectMap">
+        select
+        project_id, category_id, tutor_id, project_name, starttime, endtime, allfunds, approve_status, approve_time
+        from software.project
+        <where>
+            <if test="projectId != null and projectId != ''">
+                and project_id = #{projectId}
+            </if>
+            <if test="categoryId != null and categoryId != ''">
+                and category_id = #{categoryId}
+            </if>
+            <if test="tutorId != null and tutorId != ''">
+                and tutor_id = #{tutorId}
+            </if>
+            <if test="projectName != null and projectName != ''">
+                and project_name = #{projectName}
+            </if>
+            <if test="starttime != null">
+                and starttime = #{starttime}
+            </if>
+            <if test="endtime != null">
+                and endtime = #{endtime}
+            </if>
+            <if test="allfunds != null">
+                and allfunds = #{allfunds}
+            </if>
+            <if test="approveStatus != null">
+                and approve_status = #{approveStatus}
+            </if>
+            <if test="approveTime != null">
+                and approve_time = #{approveTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="projectId" useGeneratedKeys="true">
+        insert into software.project(category_id, tutor_id, project_name, starttime, endtime, allfunds, approve_status, approve_time)
+        values (#{categoryId}, #{tutorId}, #{projectName}, #{starttime}, #{endtime}, #{allfunds}, #{approveStatus}, #{approveTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="projectId" useGeneratedKeys="true">
+        insert into software.project(category_id, tutor_id, project_name, starttime, endtime, allfunds, approve_status,
+        approve_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.categoryId}, #{entity.tutorId}, #{entity.projectName}, #{entity.starttime}, #{entity.endtime},
+            #{entity.allfunds}, #{entity.approveStatus}, #{entity.approveTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="projectId" useGeneratedKeys="true">
+        insert into software.project(category_id, tutor_id, project_name, starttime, endtime, allfunds, approve_status,
+        approve_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.categoryId}, #{entity.tutorId}, #{entity.projectName}, #{entity.starttime}, #{entity.endtime},
+            #{entity.allfunds}, #{entity.approveStatus}, #{entity.approveTime})
+        </foreach>
+        on duplicate key update
+        category_id = values(category_id) , tutor_id = values(tutor_id) , project_name = values(project_name) ,
+        starttime = values(starttime) , endtime = values(endtime) , allfunds = values(allfunds) , approve_status =
+        values(approve_status) , approve_time = values(approve_time)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update software.project
+        <set>
+            <if test="categoryId != null and categoryId != ''">
+                category_id = #{categoryId},
+            </if>
+            <if test="tutorId != null and tutorId != ''">
+                tutor_id = #{tutorId},
+            </if>
+            <if test="projectName != null and projectName != ''">
+                project_name = #{projectName},
+            </if>
+            <if test="starttime != null">
+                starttime = #{starttime},
+            </if>
+            <if test="endtime != null">
+                endtime = #{endtime},
+            </if>
+            <if test="allfunds != null">
+                allfunds = #{allfunds},
+            </if>
+            <if test="approveStatus != null">
+                approve_status = #{approveStatus},
+            </if>
+            <if test="approveTime != null">
+                approve_time = #{approveTime},
+            </if>
+        </set>
+        where project_id = #{projectId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from software.project where project_id = #{projectId}
+    </delete>
+
+</mapper>
